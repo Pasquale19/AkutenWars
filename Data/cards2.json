@@ -1,0 +1,58 @@
+[
+{
+"Name":"Clionen",
+"ST":"1",
+"SP":"2",
+"RPS":"Rock",
+"Color":"W"
+},
+{
+"Name":"Pudding Soldier",
+"ST":"3",
+"SP":"1",
+"RPS":"Scissor",
+"Color":"W"
+},
+{
+"Name":"Tackle Rock",
+"ST":"3",
+"SP":"1",
+"RPS":"Rock",
+"Color":"B"
+},
+{
+"Name":"Angel King Pipumin",
+"ST":"10",
+"SP":"2",
+"RPS":"Rock",
+"Color":"W"
+},
+{
+"Name":"Dish of Poseidon",
+"ST":"8",
+"SP":"1",
+"RPS":"Paper",
+"Color":"W"
+},
+{
+"Name":"Illuminating Doll",
+"ST":"3",
+"SP":"1",
+"RPS":"Rock",
+"Color":"W"
+},
+{
+"Name":"ST. Mailbird",
+"ST":"3",
+"SP":"2",
+"RPS":"Scissor",
+"Color":"W"
+},
+{
+"Name":"Unicorn Rider",
+"ST":"6",
+"SP":"3",
+"RPS":"Rock",
+"Color":"W"
+}
+]
