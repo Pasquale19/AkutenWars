@@ -5,17 +5,28 @@ using System.ComponentModel;
 using Newtonsoft.Json;
 using System.Windows;
 using System.IO;
+using AkutenWars.Cards;
 
 namespace AkutenWars
 {
 
 
-    public class Card : INotifyPropertyChanged
+    [Serializable]
+    public class Card : ObservableObject
     {
         private int _SP = 0;
         private int _ST = 0;
         private RPS _RPS = RPS.Scissor;
         private string _Name = "";
+        private int _Rarity = 4;
+
+        #region Konstruktor
+        public Card() { }
+        public Card(string Name)
+        {
+            _Name = Name;
+        }
+        #endregion
 
         public int SP
         {
@@ -25,7 +36,7 @@ namespace AkutenWars
                 if (_SP != value)
                 {
                     _SP = value;
-                    OnPropertyChanged(nameof(SP));
+                    NotifyPropertyChanged(nameof(SP));
                 }
             }
         }
@@ -38,7 +49,7 @@ namespace AkutenWars
                 if (_ST != value)
                 {
                     _ST = value;
-                    OnPropertyChanged(nameof(ST));
+                    NotifyPropertyChanged(nameof(ST));
                 }
             }
         }
@@ -52,7 +63,7 @@ namespace AkutenWars
                 if (_RPS != value)
                 {
                     _RPS = value;
-                    OnPropertyChanged(nameof(RPS));
+                    NotifyPropertyChanged(nameof(RPS));
                 }
             }
         }
@@ -65,21 +76,35 @@ namespace AkutenWars
                 if (_Name != value)
                 {
                     _Name = value;
-                    OnPropertyChanged(nameof(Name));
+                    NotifyPropertyChanged(nameof(Name));
                 }
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
+        public int Rarity
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => _Rarity;
+            set { if (_Rarity != value) { _Rarity = value; NotifyPropertyChanged(nameof(Rarity)); } }
         }
+
+        public CardRank Rank
+        {
+            get => (CardRank)Rarity;
+            set
+            {
+                Rarity = (int)value;
+            }
+        }
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+
+        //protected void NotifyPropertyChanged(string propertyName)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
 
         public override string ToString()
         {
-            return $"Card{Name}\tSP:{SP}\tST:{ST}\tRPS:{RPS}";
+            return $"Card{Name}: \t SP:{SP}\t ST:{ST}\t RPS:{RPS}";
         }
 
         public static IEnumerable<Card> LoadCardsFromFile(string filePath = "Data/cards.json")
@@ -92,6 +117,31 @@ namespace AkutenWars
             //}
             return cards;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null || obj.GetType() != this.GetType())
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+
+
+            var other = (Card)obj;
+            return string.Equals(Name, other.Name) &&
+                   SP == other.SP &&
+                   ST == other.ST &&
+                   RPS == other.RPS &&
+                   Rarity == other.Rarity;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, SP, ST, RPS, Rarity);
+        }
+    }
+
+    public class EmptyCard : Card
+    {
+        public EmptyCard() { this.Name = "Empty";}
     }
 }
 

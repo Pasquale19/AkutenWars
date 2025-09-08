@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Lance : Piece
     {
         public Lance(EnumPlayer player) : base(player)

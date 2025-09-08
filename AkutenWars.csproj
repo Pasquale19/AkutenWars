@@ -92,7 +92,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Cards\EnumCardRank.cs" />
     <Compile Include="Cards\RpsJsonConverter.cs" />
+    <Compile Include="GameResult.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Cards\Deck.cs" />
     <Compile Include="Cards\Landmine.cs" />

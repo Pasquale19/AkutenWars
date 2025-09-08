@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Landmine : Card
     {
         public Landmine() { Name = "Landmine"; }
@@ -36,8 +37,23 @@ namespace AkutenWars
         public virtual string imagePath => "pack://application:,,,/Assets/Landmine.png";
 
         public virtual BitmapImage Image => new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null || obj.GetType() != this.GetType())
+                return false;
+            if (ReferenceEquals(this, obj)) return true;
+            var other = (Landmine)obj;
+
+            return Name == other.Name;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name);
+        }
     }
 
+    [Serializable]
     /// <summary>
     /// horizontal Landmine Card
     /// </summary>
@@ -51,6 +67,7 @@ namespace AkutenWars
     /// <summary>
     /// diagonal Landmine
     /// </summary>
+    [Serializable]
     public class Landmine_D : Landmine
     {
         public Landmine_D() { Name = "Landmine-D"; }

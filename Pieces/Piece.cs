@@ -21,14 +21,25 @@ namespace AkutenWars
         Silver,
         Gold
     }
+
+    [Serializable]
     public abstract class Piece : ObservableObject
     {
         public Piece(EnumPlayer player)
         {
             this.Color = player;
         }
+
+        public Piece(EnumPlayer player, Sleeve sleeve)
+        {
+            this.Color = player;
+            this.Sleeve = sleeve;
+        }
+
+        public Piece(EnumPlayer player, Card card) : this(player, new Sleeve(card)) { }
+
         #region properties
-        private Sleeve _sleeve=new Sleeve();
+        private Sleeve _sleeve = new Sleeve();
         public Sleeve Sleeve
         {
             get => _sleeve;
@@ -43,7 +54,18 @@ namespace AkutenWars
             }
         }
 
-        public Card Card => Sleeve.Card;
+        public Card Card
+        {
+            get => Sleeve.Card;
+            set
+            {
+                if (Sleeve.Card != value)
+                {
+                    Sleeve.Card = value;
+                    NotifyPropertyChanged(nameof(Card));
+                }
+            }
+        }
         public bool SleeveOpen => Sleeve.isOpen;
 
         public virtual PieceType Type { get; set; }

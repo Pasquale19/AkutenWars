@@ -7,14 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Media.Media3D;
+using Newtonsoft.Json;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Board
     {
 
-
+        [JsonConverter(typeof(Piece2DArrayConverter))]
         private readonly Piece[,] _pieces = new Piece[9, 9];
 
         public Piece[,] pieces
@@ -114,7 +117,7 @@ namespace AkutenWars
         }
         public Dictionary<Piece, Position> GetNeighbourDict(Position pos)
         {
-            Dictionary<Piece,Position> dic= new Dictionary<Piece,Position>();
+            Dictionary<Piece, Position> dic = new Dictionary<Piece, Position>();
             int boardSize = this.pieces.GetLength(0);
             //int[] dRows = { -1, -1, -1, 0, 0, 1, 1, 1 };
             //int[] dCols = { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -129,9 +132,9 @@ namespace AkutenWars
                 if (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize)
                 {
                     Position newPos = new Position(newRow, newCol);
-                    Piece piece=pieces[newRow, newCol];
-                    if (piece != null) {dic[piece] = newPos; }
-                    
+                    Piece piece = pieces[newRow, newCol];
+                    if (piece != null) { dic[piece] = newPos; }
+
                 }
             }
             return dic;
@@ -143,7 +146,7 @@ namespace AkutenWars
             //int[] dRows = { -1, -1, -1, 0, 0, 1, 1, 1 };
             //int[] dCols = { -1, 0, 1, -1, 1, -1, 0, 1 };
             int[] dRows = { 0, 1, 0, -1 };
-            int[] dCols = { 1, 0, -1, 0};
+            int[] dCols = { 1, 0, -1, 0 };
 
             for (int i = 0; i < dRows.GetLength(0); i++)
             {
@@ -161,6 +164,71 @@ namespace AkutenWars
         public IEnumerable<Piece> GetNeighbourPieces(Position pos, EnumPlayer Color)
         {
             return GetNeighbourPieces(pos).Where(x => x.Color == Color);
+        }
+        public IEnumerable<Piece> GetPiece(EnumPlayer Color)
+        {
+            
+            foreach (Piece piece in pieces)
+            {
+                if (piece==null) continue;
+                if (piece.Color == Color) yield return piece;
+            }
+            yield break;
+        }
+        //check if all selectedCardAreValid
+        public bool isValid(EnumPlayer player)
+        {
+            IEnumerable<Piece> pieces = GetPiece(player);
+            IEnumerable<Card> Cards = pieces.Select(x =>
+            {
+                return x.Sleeve.Card;
+            }).OrderBy(card => card.Name);
+            string error = "";
+            return checkDeck(Cards, out error);
+            //IEnumerable<Piece> whitePieces = GetPiece(EnumPlayer.White);
+            //IEnumerable<Piece> blackPieces = GetPiece(EnumPlayer.Black);
+
+            //IEnumerable<Card> whiteCards = whitePieces.Select(x =>
+            //{
+            //    return x.Sleeve.Card;
+            //}).OrderBy(card=>card.Name);
+            //IEnumerable<Card> blackCards = blackPieces.Select(x =>
+            //{
+            //    return x.Sleeve.Card;
+            //}).OrderBy(card=>card.Name);
+
+
+            //if (player == EnumPlayer.None)
+            //{
+            //    string errorW = "";
+            //    string errorB = "";
+            //    bool W = checkDeck(whiteCards,out errorW);
+            //    bool B = checkDeck(blackCards, out errorB);
+            //    return W && B;
+            //}
+
+            //if (player == EnumPlayer.Black)
+            //{
+
+            //}
+
+        }
+
+        bool checkDeck(IEnumerable<Card> cards, out string errorMsg)
+        {
+            errorMsg = "";
+           // IEnumerable<Landmine> lms = cards.Select(x => { if (x is Landmine) return x as Landmine; } );
+            foreach (Card card in cards)
+            {
+                int Limit = card.Rarity;
+                int ct = cards.Select(x => card.Name == x.Name).Count();
+                if (ct > Limit)
+                {
+                    errorMsg += $"{card.Name} exceeds Limit  {ct}/{card.Rarity} (Rank:{card.Rank})\n";
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

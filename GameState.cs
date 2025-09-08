@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using AkutenWars.Utilities;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class GameState : ObservableObject
     {
         public GameState(EnumPlayer player, Board board)
@@ -36,6 +38,38 @@ namespace AkutenWars
             }
         }
 
+        
+
+        ObservableCollection<Card> _blackDeck = Deck.DefaultDeck();
+
+        public ObservableCollection<Card> blackDeck
+        {
+            get { return _blackDeck; }
+            set
+            {
+                if (_blackDeck != value)
+                {
+                    _blackDeck = value;
+                    NotifyPropertyChanged(nameof(blackDeck));
+                }
+            }
+        }
+
+        ObservableCollection<Card> _whiteDeck = Deck.DefaultDeck();
+
+        public ObservableCollection<Card> whiteDeck
+        {
+            get { return _whiteDeck; }
+            set
+            {
+                if (_whiteDeck != value)
+                {
+                    _whiteDeck = value;
+                    NotifyPropertyChanged(nameof(whiteDeck));
+                }
+            }
+        }
+
         public IEnumerable<Move> LegalMovesForPiece(Position pos)
         {
             bool isInside = Board.IsInside(pos);
@@ -54,10 +88,41 @@ namespace AkutenWars
 
         public void MakeMove(Move move)
         {
+            GameResult result = GameResult.OnGoing;
+            MakeMove(move, out result);
+        }
 
+        public void MakeMove(Move move, out GameResult result)
+        {
             move.Execute(Board);
             if (CurrentPlayer == EnumPlayer.Black) { CurrentPlayer = EnumPlayer.White; }
             else { CurrentPlayer = EnumPlayer.Black; }
+
+            IEnumerable<Piece> blackPieces = Board.GetPiece(EnumPlayer.Black);
+            IEnumerable<Piece> whitePieces = Board.GetPiece(EnumPlayer.White);
+
+            bool whiteKing = whitePieces.Any(x => x is King);
+            bool blackKing = blackPieces.Any(y => y is King);
+
+            string title = "GameResult";
+            if (!whiteKing && !blackKing)
+            {
+                MessageBox.Show("Stalemate", title);
+                result = GameResult.StaleMate;
+            }
+
+            if (!whiteKing)
+            {
+                MessageBox.Show("black won", title);
+                result = GameResult.blackWon;
+            }
+
+            if (!blackKing)
+            {
+                MessageBox.Show("white won", title);
+                result = GameResult.whiteWon;
+            }
+            result = GameResult.OnGoing;
         }
 
         public void AddRandomCards()

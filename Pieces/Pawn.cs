@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Pawn : Piece
     {
-        public Pawn(EnumPlayer player) : base(player)
+        public Pawn(EnumPlayer player=EnumPlayer.None) : base(player)
         {
 
         }
+        public Pawn(EnumPlayer player, Sleeve sleeve) : base(player, sleeve)
+        {
+        }
+
         protected override Direction[] dirs
         {
             get
@@ -37,7 +42,7 @@ namespace AkutenWars
 
         public override Piece Copy()
         {
-            Pawn copy = new Pawn(this.Color);
+            Pawn copy = new Pawn(this.Color,this.Sleeve);
             copy.hasMoved = true;
             return copy;
         }

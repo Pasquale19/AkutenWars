@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class SilverGeneral : Piece
     {
         public SilverGeneral(EnumPlayer player) : base(player)

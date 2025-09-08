@@ -15,7 +15,7 @@ namespace AkutenWars
         Scissor,
         Multi
     }
-    [JsonConverter(typeof(RpsJsonConverter))]
+    [JsonConverter(typeof(RpsJsonConverter)), Serializable]
     public struct RPS
     {
         public static readonly RPS Scissor = new RPS(RPSEnum.Scissor);
