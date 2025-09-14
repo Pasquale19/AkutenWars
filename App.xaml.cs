@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace AkutenWars
@@ -42,5 +43,8 @@ namespace AkutenWars
             //    MessageBox.Show($"Name: {card.Name}, SP: {card.SP}, ST: {card.ST}, RPS: {card.RPS}", card.name);
             //}
         }
+
+
+       
     }
 }

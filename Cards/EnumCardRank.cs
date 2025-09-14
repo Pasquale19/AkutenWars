@@ -8,8 +8,10 @@ namespace AkutenWars.Cards
 {
     public enum CardRank
     {
-        Plebb=4,
-        Gen=2, //General
-        King=1
+        Plebb=5,
+        Gen=4, //General
+        King=2,
+        GreatKing=1,
+        Landmine=-1
     }
 }

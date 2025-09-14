@@ -13,6 +13,10 @@ namespace AkutenWars
         {
         }
 
+        public King(EnumPlayer player, Sleeve sleeve) : base(player, sleeve)
+        {
+        }
+
         protected override Direction[] dirs => new Direction[]
         {
             Direction.North,Direction.NorthEast,

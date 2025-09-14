@@ -1,0 +1,15 @@
+- DeckControl can be improved -> force Ctrl to update properly without reassigning the Piece Property
+
+- maui community toolkit for popup -> CanBEDismiss
+- globale Style für PieceControl mit DataTrigger auf Color für Foreground
+
+offene Fragen:
+- wie gestalte ich die Auswahl der Karten?
+	Idee: eigenständiges DrawBoard mit PieceGrid und CardSymbolCtrl
+	Button zum Abschluss
+
+
+- wie gestalte ich das SpielBoard?
+  Doppelklick öffnet Kartensymbol?
+  cardControl oder CardSymbol im Hintergrund der Pieces?
+

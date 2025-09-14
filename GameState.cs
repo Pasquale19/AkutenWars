@@ -12,6 +12,14 @@ namespace AkutenWars
     [Serializable]
     public class GameState : ObservableObject
     {
+        public GameState() : this(Board.InitialBoard()) { }
+
+        public GameState(Board board)
+        {
+            this.Board = board;
+        }
+
+        public GameState(EnumPlayer player) : this(player, Board.InitialBoard()) { }
         public GameState(EnumPlayer player, Board board)
         {
             this.CurrentPlayer = player;
@@ -38,7 +46,12 @@ namespace AkutenWars
             }
         }
 
-        
+        public static GameState RandomStart()
+        {
+            GameState game = new GameState(EnumPlayer.White, Board.InitialBoard());
+            game.AddRandomCards();
+            return game;
+        }
 
         ObservableCollection<Card> _blackDeck = Deck.DefaultDeck();
 
@@ -92,9 +105,17 @@ namespace AkutenWars
             MakeMove(move, out result);
         }
 
+
+        public void switchPlayer()
+        {
+            this.CurrentPlayer = this.CurrentPlayer.Opponent();
+        }
+       
+
         public void MakeMove(Move move, out GameResult result)
         {
-            move.Execute(Board);
+            this.Board.MakeMove(move);
+          //  move.Execute(Board);
             if (CurrentPlayer == EnumPlayer.Black) { CurrentPlayer = EnumPlayer.White; }
             else { CurrentPlayer = EnumPlayer.Black; }
 
@@ -123,6 +144,11 @@ namespace AkutenWars
                 result = GameResult.whiteWon;
             }
             result = GameResult.OnGoing;
+        }
+
+        public void undoMove()
+        {
+
         }
 
         public void AddRandomCards()

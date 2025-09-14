@@ -14,6 +14,7 @@ namespace AkutenWars
     [Serializable]
     public class Card : ObservableObject
     {
+        public static Card GreatKingBearden=>new Card() { Name="Angel King Bearden", Rank=CardRank.GreatKing, ST=11, SP=3, RPS=RPS.Scissor};
         private int _SP = 0;
         private int _ST = 0;
         private RPS _RPS = RPS.Scissor;
@@ -86,7 +87,7 @@ namespace AkutenWars
             set { if (_Rarity != value) { _Rarity = value; NotifyPropertyChanged(nameof(Rarity)); } }
         }
 
-        public CardRank Rank
+        public virtual CardRank Rank
         {
             get => (CardRank)Rarity;
             set
@@ -104,7 +105,7 @@ namespace AkutenWars
 
         public override string ToString()
         {
-            return $"Card{Name}: \t SP:{SP}\t ST:{ST}\t RPS:{RPS}";
+            return $"Card{Name}: \t SP:{SP}\t ST:{ST}\t RPS:{RPS}\t Rank:{Rank}";
         }
 
         public static IEnumerable<Card> LoadCardsFromFile(string filePath = "Data/cards.json")

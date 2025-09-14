@@ -51,7 +51,7 @@ namespace AkutenWars
 
             }
         }
-
+        [Obsolete("move to board")]
         public void Execute(Board board)
         {
             Piece piece = board[startSquare];
@@ -83,10 +83,12 @@ namespace AkutenWars
 
             IEnumerable<Piece> neighbours = board.GetNeighbourPieces(targetSquare).Where(x => x != null);
             Dictionary<Piece, Position> neighbours2 = board.GetNeighbourDict(targetSquare);
-            IEnumerable<KeyValuePair<Piece, Position>> kvpNeigbours = neighbours2.Where(x => x.Key != null);
+            IEnumerable<KeyValuePair<Piece, Position>> kvpNeigbours = neighbours2.Where(x => x.Key != null); //not necassary
             IEnumerable<Piece> neighbourPieces = kvpNeigbours.Select(x => x.Key);
             foreach (Piece p in neighbourPieces) { p.Sleeve.isOpen = true; }
-            bool isLandmine = neighbourPieces.Any(x => x.Card is Landmine);
+
+
+            
             IEnumerable<Piece> lmsPieces = neighbourPieces.Where(x => x.Card is Landmine);
            
             foreach (Piece p in lmsPieces)

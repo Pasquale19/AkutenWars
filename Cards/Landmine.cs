@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using AkutenWars.Cards;
 
 namespace AkutenWars
 {
@@ -15,10 +17,14 @@ namespace AkutenWars
         {
             AkutenWars.Direction.North, AkutenWars.Direction.South, AkutenWars.Direction.East
         };
+
+        public override CardRank Rank { get => CardRank.Landmine; set { } }
         public override string ToString()
         {
             return $"Card: {GetType().Name}";
         }
+
+
 
         public virtual void Detonate(Board board, Position pos)
         {

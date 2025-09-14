@@ -12,6 +12,8 @@ namespace AkutenWars
         public SilverGeneral(EnumPlayer player) : base(player)
         {
         }
+
+        public override string Name => "Silver\nGeneral";
         protected override int scalar => 1;
         protected override Direction[] dirs => new Direction[]
         {

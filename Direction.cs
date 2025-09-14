@@ -48,6 +48,11 @@ namespace AkutenWars
             }
             return false;
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RowDelta, ColumnDelta);
+        }
         public static Direction operator +(Direction a,Direction b)
         {
             return new Direction(a.RowDelta+b.RowDelta,a.ColumnDelta+b.ColumnDelta);

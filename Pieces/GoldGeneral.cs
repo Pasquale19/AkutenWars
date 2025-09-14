@@ -13,6 +13,8 @@ namespace AkutenWars
         {
         }
 
+        public override string Name => "Gold\nGeneral";
+
         protected override Direction[] dirs => new Direction[]
         {
             Direction.North*VZ_direcion,
