@@ -29,7 +29,7 @@ namespace AkutenWars
 
         public override Piece Copy()
         {
-            throw new NotImplementedException();
+            return new Bishop(player: Color) { Sleeve = Sleeve.Copy() };
         }
     }
 }

@@ -31,7 +31,7 @@ namespace AkutenWars
 
         public override Piece Copy()
         {
-            throw new NotImplementedException();
+            return new Lance(player: Color) { Sleeve = Sleeve.Copy() };
         }
 
         protected override IEnumerable<Position> MovePosInDir(Position from, Board board, Direction dir)

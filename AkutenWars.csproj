@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{72B46AB9-6CB9-400C-94A1-4C3EFD080A5C}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>AkutenWars</RootNamespace>
     <AssemblyName>AkutenWars</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -33,6 +33,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -94,13 +97,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    <Compile Include="Bot\PieceSquareTable.cs" />
     <Compile Include="Bot\Searcher.cs" />
+    <Compile Include="Cards\Class1.cs" />
     <Compile Include="Cards\EnumCardRank.cs" />
     <Compile Include="Cards\RpsJsonConverter.cs" />
+    <Compile Include="GameMode.cs" />
     <Compile Include="GameResult.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Cards\Deck.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Moves\Move.cs" />
     <Compile Include="Moves\MoveType.cs" />
     <Compile Include="Moves\NormalMove.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\ObservableObject.cs" />
     <Compile Include="Pieces\Bishop.cs" />
     <Compile Include="Pieces\Knight.cs" />
@@ -124,10 +127,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Board.cs" />
     <Compile Include="Cards\CardLoader.cs" />
     <Compile Include="Direction.cs" />
@@ -167,6 +166,9 @@
     <Content Include="Data\export.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\whiteStartDeck.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -175,40 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\BishopB.png" />
-    <Resource Include="Assets\BishopW.png" />
-    <Resource Include="Assets\Board.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\CursorB.cur" />
-    <Resource Include="Assets\CursorW.cur" />
-    <Resource Include="Assets\icon.ico" />
-    <Resource Include="Assets\KingB.png" />
-    <Resource Include="Assets\KingW.png" />
-    <Resource Include="Assets\KnightB.png" />
-    <Resource Include="Assets\KnightW.png" />
-    <Resource Include="Assets\PawnB.png" />
-    <Resource Include="Assets\PawnW.png" />
-    <Resource Include="Assets\QueenB.png" />
-    <Resource Include="Assets\QueenW.png" />
-    <Resource Include="Assets\RookB.png" />
-    <Resource Include="Assets\RookW.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Paper.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Rock.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\RPS.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Scissor.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

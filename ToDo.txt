@@ -13,3 +13,19 @@ offene Fragen:
   Doppelklick öffnet Kartensymbol?
   cardControl oder CardSymbol im Hintergrund der Pieces?
 
+
+- BoardGrid als Control
+- cardcontrol mit margin und background black or white
+- Background ist imageBrush Board Bild
+
+
+- PieceWindow Bindíng funktioniert nicht
+- each project needs it own assembly Name
+
+
+-negaMax algorithm
+
+TranslateTransform
+Bitmap renderer
+Testing
+

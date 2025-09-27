@@ -5,18 +5,29 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
+using System.Windows.Markup;
+using System.IO;
+using System.Runtime.CompilerServices;
 //using Min = System.Math.Min;
 
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Move
     {
-        public Position startSquare { get; set; }
-        public Position targetSquare { get; set; }
+        public readonly Position startSquare;
+        public readonly Position targetSquare;
+        private Piece targetPiece = null;
+
 
         private int[][] numSquaresToEdge = new int[9 * 9][];
 
+        Piece movedPiece;
+        // public List<Piece> openedPieces { get; private set; } = new List<Piece>();
+        public List<Position> openedPieces { get; private set; } = new List<Position>();
+        public List<(Piece, Position)> removedPieces { get; private set; } = new List<(Piece, Position)>();
 
         public Move(Position from, Position oneMovePos)
         {
@@ -51,60 +62,101 @@ namespace AkutenWars
 
             }
         }
-        [Obsolete("move to board")]
+
+        /// <summary>
+        /// I implemented it so that first the target Piece Sleeve gets opened. If it is a Landmine it expoldes without opening the other Pieces Sleeves.
+        /// Then the attacking Piece Sleeve is opened. If it is a Landmine it explodes without opening the surrounding Pieces.
+        /// Then  all Neighbour Pieces are opened. If one of these is a Landmine it explodes without opneing the Sleeves from its neighbours.If one of the neighbours is a horizontal Landmine, then the attacking and the target Piece gets destroyed and the attack end.
+        /// If not the attack continues.
+        /// </summary>
+        /// <param name="board"></param>
+        [Obsolete("Landmine and oppenedPiece doesnt work yet")]
         public void Execute(Board board)
         {
             Piece piece = board[startSquare];
+            movedPiece = piece;
             board[startSquare] = null;
-            Piece targetPiece = board[targetSquare];
-            piece.hasMoved = true; //mighbt be not necassary
+            targetPiece = board[targetSquare];
+            //item.hasMoved = true; //mighbt be not necassary
             if (targetPiece == null)
             {
                 board[targetSquare] = piece;
                 return;
             }
+            if (movedPiece.Sleeve.isOpen == false)
+            {
+                movedPiece.Sleeve.isOpen = true;
+                // openedPieces.Add(movedPiece);
+                openedPieces.Add(startSquare);
+            }
             Card currentCard = piece.Card;
             piece.Sleeve.isOpen = true;
             Card targetCard = targetPiece.Card;
-            targetPiece.Sleeve.isOpen = true;
+            if (targetPiece.Sleeve.isOpen == false)
+            {
+                targetPiece.Sleeve.isOpen = true;
+                openedPieces.Add(targetSquare);
+                //  openedPieces.Add(targetPiece);
+            }
+           
+
+            //what happen if both are landmine?
 
             if (targetCard is Landmine)
             {
                 Landmine lm = (Landmine)targetCard;
-                lm.Detonate(board, targetSquare);
+                // this.openedPieces.Add(targetPiece);
+               // this.openedPieces.Add(targetSquare);
+                IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, targetSquare);
+                this.removedPieces.AddRange(rmoved);
+
                 return; //sleves are not opened
             }
             if (currentCard is Landmine)
             {
                 Landmine lm = (Landmine)currentCard;
-                lm.Detonate(board, targetSquare);
+                //this.openedPieces.Add(startSquare);
+                //    this.openedPieces.Add(movedPiece);
+                IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, targetSquare);
+                this.removedPieces.AddRange(rmoved);
                 return; //sleves are not opened
             }
 
-            IEnumerable<Piece> neighbours = board.GetNeighbourPieces(targetSquare).Where(x => x != null);
+
             Dictionary<Piece, Position> neighbours2 = board.GetNeighbourDict(targetSquare);
             IEnumerable<KeyValuePair<Piece, Position>> kvpNeigbours = neighbours2.Where(x => x.Key != null); //not necassary
-            IEnumerable<Piece> neighbourPieces = kvpNeigbours.Select(x => x.Key);
-            foreach (Piece p in neighbourPieces) { p.Sleeve.isOpen = true; }
 
-
-            
-            IEnumerable<Piece> lmsPieces = neighbourPieces.Where(x => x.Card is Landmine);
-           
-            foreach (Piece p in lmsPieces)
+            //open Pieces
+            foreach (KeyValuePair<Piece, Position> pp in neighbours2)
             {
-                Position lmSquare = neighbours2[p];
-                Landmine lm = p.Card as Landmine;
-                lm.Detonate(board, lmSquare);
+                Piece p = pp.Key;
+                if (p == null) continue;
+                if (p.Sleeve.isOpen == false)
+                {
+                    p.Sleeve.isOpen = true;
+                    openedPieces.Add(pp.Value);
+                }
             }
 
-            if (board[targetSquare] == null) { return; }
 
-            neighbours = board.GetNeighbourPieces(targetSquare).Where(x => x != null);
-            // EnumPlayer opponentColor = piece.Color == EnumPlayer.White ? EnumPlayer.Black : EnumPlayer.White;
+
+            IEnumerable<KeyValuePair<Piece, Position>> lmsPieces = kvpNeigbours.Where(x => x.Key.Card is Landmine);
+
+            foreach (KeyValuePair<Piece, Position> pp in lmsPieces)
+            {
+                Position lmSquare = pp.Value;
+                Landmine lm = pp.Key.Card as Landmine;
+                
+                // openedPieces.Add(p);
+                IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, targetSquare);
+                this.removedPieces.AddRange(rmoved);
+
+            }
+
+            // EnumPlayer opponentColor = item.Color == EnumPlayer.White ? EnumPlayer.Black : EnumPlayer.White;
             EnumPlayer opponentColor = piece.Color.Opponent();
-            IEnumerable<Piece> currentNeighbours = neighbours.Where(x => x.Color == piece.Color);
-            IEnumerable<Piece> opponentNeighbours = neighbours.Where(x => x.Color == opponentColor);
+            IEnumerable<Piece> currentNeighbours = kvpNeigbours.Where(x => x.Key.Color == piece.Color).Select(x => x.Key);
+            IEnumerable<Piece> opponentNeighbours = kvpNeigbours.Where(x => x.Key.Color == opponentColor).Select(x => x.Key);
 
             int targetST = targetCard.ST;
             string info1 = $"{piece.FullName}\n{piece.Card}\nST={currentCard.ST}";
@@ -113,7 +165,8 @@ namespace AkutenWars
             {
                 info2 += $"+{opponentPiece.Card.SP} /{opponentPiece.Card}\n";
                 targetST += opponentPiece.Card.SP;
-                opponentPiece.Sleeve.isOpen = true;
+
+
             }
             info2 += $"={targetST}";
             int currentST = currentCard.ST;
@@ -121,7 +174,6 @@ namespace AkutenWars
             {
                 info1 += $"+{currentPiece.Card.SP} /{currentPiece.Card}\n";
                 currentST += currentPiece.Card.SP;
-                currentPiece.Sleeve.isOpen = true;
             }
             info1 += $"={currentST}";
             if (Math.Abs(currentST - targetST) < 1)
@@ -141,24 +193,75 @@ namespace AkutenWars
                 }
             }
             string info = info1 + "\n" + info2;
-            MessageBox.Show(info, $"{piece.FullName} vs {targetPiece.FullName}");
+            //MessageBox.Show(info, $"{piece.FullName} vs {targetPiece.FullName}");
 
             //if (currentST>targetST)
             //{
-            //    piece.Sleeve.isOpen = true;
+            //    item.Sleeve.isOpen = true;
             //}
             //else
             //{
             //    targetPiece.Sleeve.isOpen = true;
             //}
             board[targetSquare] = currentST > targetST ? piece : targetPiece;
+            if (currentST > targetST)
+            {
+                this.removedPieces.Add((targetPiece, targetSquare));
+            }
+            else
+            {
+                this.removedPieces.Add((movedPiece, startSquare));
+            }
 
         }
 
+
+        public void Unmake(Board board)
+        {
+            foreach (var item in removedPieces)
+            {
+                Piece piece = item.Item1 as Piece;
+                Position position = item.Item2 as Position;
+                if (piece == null) continue;
+                board[position] = piece;
+            }
+            board[startSquare] = movedPiece;
+            if (targetPiece != null)
+            {
+                board[targetSquare] = targetPiece;
+            }
+            else
+            {
+                board[targetSquare] = null;
+            }
+                foreach (Position pos in openedPieces)
+                {
+                    Piece p = board[pos];
+                    p.Sleeve.isOpen = false;
+                }
+
+
+
+        }
         public override string ToString()
         {
             return $"{GetType().Name} {startSquare} -> {targetSquare}";
         }
+        void importJson(string filePath)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new Piece2DArrayConverter());
+            string json = File.ReadAllText(filePath);
+            Move Da = JsonConvert.DeserializeObject<Move>(json, settings);
+            //this = Da;
+        }
 
+       public void saveJson(string filePath)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new Piece2DArrayConverter());
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented, settings);
+            File.WriteAllText(filePath, json);
+        }
     }
 }

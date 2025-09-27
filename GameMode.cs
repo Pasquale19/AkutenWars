@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
-    public enum MoveType
+    public enum GameMode
     {
-        Normal = 0,
-        Attack=1
+        Debug=-1,
+        SinglePlayer=0,
+        MultiPlayer=1,
 
     }
 }

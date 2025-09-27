@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AkutenWars
 {
@@ -44,6 +46,31 @@ namespace AkutenWars
                     NotifyPropertyChanged(nameof(Card));
                 }
             }
+        }
+
+        public Sleeve Copy()
+        {
+            return new Sleeve(Card) { isOpen = this.isOpen };
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null || obj.GetType() != this.GetType())
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+
+
+            var other = (Sleeve)obj;
+            return other.isOpen==this.isOpen && other.Card==this.Card;
+        }
+        public static bool operator ==(Sleeve left, Sleeve right)
+        {
+            return EqualityComparer<Sleeve>.Default.Equals(left, right);
+        }
+        public static bool operator !=(Sleeve left, Sleeve right)
+        {
+            return !(left == right);
         }
 
 

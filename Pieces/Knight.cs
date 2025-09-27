@@ -15,8 +15,8 @@ namespace AkutenWars
 
         protected override Direction[] dirs => new Direction[]
         {
-            new Direction(-1,2)*VZ_direcion,
-           new Direction(1,2)*VZ_direcion
+            new Direction(2,-1)*VZ_direcion,
+           new Direction(2,1)*VZ_direcion
         };
         protected override int scalar => 1;
 
@@ -28,7 +28,7 @@ namespace AkutenWars
 
         public override Piece Copy()
         {
-            throw new NotImplementedException();
+            return new Knight(player: Color) { Sleeve = Sleeve.Copy() };
         }
     }
 }

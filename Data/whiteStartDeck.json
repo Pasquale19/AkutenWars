@@ -1,0 +1,165 @@
+[
+  {
+    "SP": 3,
+    "ST": 5,
+    "RPS": "Scissor",
+    "Name": "card",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 2,
+    "RPS": "Paper",
+    "Name": "Jelly Ninja",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 1,
+    "ST": 3,
+    "RPS": "Scissor",
+    "Name": "Pudding Soldier",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 1,
+    "ST": 3,
+    "RPS": "Rock",
+    "Name": "Tackle Rock",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 4,
+    "RPS": "Paper",
+    "Name": "Slime",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 2,
+    "RPS": "Paper",
+    "Name": "Jelly Ninja",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 1,
+    "ST": 3,
+    "RPS": "Scissor",
+    "Name": "Papa Cloud",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 4,
+    "RPS": "Paper",
+    "Name": "Chestnut Bomb",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 1,
+    "ST": 3,
+    "RPS": "Scissor",
+    "Name": "Pudding Soldier",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 1,
+    "RPS": "Rock",
+    "Name": "Clionen",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 3,
+    "RPS": "Paper",
+    "Name": "Panda-Li",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 8,
+    "RPS": "Rock",
+    "Name": "Valkyrie",
+    "Rarity": 4,
+    "Rank": "Gen"
+  },
+  {
+    "SP": 2,
+    "ST": 4,
+    "RPS": "Paper",
+    "Name": "Chestnut Bomb",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 3,
+    "RPS": "Rock",
+    "Name": "Devil Bat",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "$type": "AkutenWars.Landmine_D, AkutenWars",
+    "imagePath": "pack://application:,,,/Assets/Landmine_D.png",
+    "Rank": "Landmine",
+    "Image": "pack://application:,,,/Assets/Landmine_D.png",
+    "SP": 0,
+    "ST": 0,
+    "RPS": "Scissor",
+    "Name": "Landmine-D",
+    "Rarity": 4
+  },
+  {
+    "SP": 2,
+    "ST": 3,
+    "RPS": "Paper",
+    "Name": "Panda-Li",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 1,
+    "RPS": "Rock",
+    "Name": "Clionen",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 1,
+    "ST": 3,
+    "RPS": "Rock",
+    "Name": "Chirping Bird",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 3,
+    "RPS": "Paper",
+    "Name": "Panda-Li",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  },
+  {
+    "SP": 2,
+    "ST": 3,
+    "RPS": "Scissor",
+    "Name": "ST. Mailbird",
+    "Rarity": 4,
+    "Rank": "Plebb"
+  }
+]

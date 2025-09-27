@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Windows;
 using System.IO;
 using AkutenWars.Cards;
+using Newtonsoft.Json.Converters;
 
 namespace AkutenWars
 {
@@ -87,12 +88,14 @@ namespace AkutenWars
             set { if (_Rarity != value) { _Rarity = value; NotifyPropertyChanged(nameof(Rarity)); } }
         }
 
+        private CardRank _Rank = CardRank.Plebb;
         public virtual CardRank Rank
         {
-            get => (CardRank)Rarity;
+            get => _Rank;
             set
             {
-                Rarity = (int)value;
+                _Rank = value;
+               // Rarity = (int)value;
             }
         }
 
@@ -105,18 +108,37 @@ namespace AkutenWars
 
         public override string ToString()
         {
-            return $"Card{Name}: \t SP:{SP}\t ST:{ST}\t RPS:{RPS}\t Rank:{Rank}";
+            return $"{Name}: \t SP: {SP}\t ST: {ST}\t RPS: {RPS}\t Rank: {Rank}";
         }
 
         public static IEnumerable<Card> LoadCardsFromFile(string filePath = "Data/cards.json")
         {
             var json = File.ReadAllText(filePath);
-            List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(json);
+            var settings = new JsonSerializerSettings  //adds a $type property to the serialized JSON with the full type assembly name
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            };
+            settings.Converters.Add(new StringEnumConverter());
+            
+            IEnumerable<Card> cards = JsonConvert.DeserializeObject<IEnumerable<Card>>(json,settings);
             //foreach (var card in cards)
             //{
             //    MessageBox.Show($"Name: {card.Name}, SP: {card.SP}, ST: {card.ST}, RPS: {card.RPS}", card.Name);
             //}
             return cards;
+        }
+
+        public static void Export(IEnumerable<Card> cards,string filePath = "Data/cards.json")
+        { 
+            var settings = new JsonSerializerSettings  //adds a $type property to the serialized JSON with the full type assembly name
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                Formatting = Formatting.Indented
+            };
+            settings.Converters.Add(new StringEnumConverter());
+
+            JsonConvert.SerializeObject(filePath, settings); 
         }
 
         public override bool Equals(object obj)
@@ -137,6 +159,14 @@ namespace AkutenWars
         public override int GetHashCode()
         {
             return HashCode.Combine(Name, SP, ST, RPS, Rarity);
+        }
+        public static bool operator ==(Card left, Card right)
+        {
+            return EqualityComparer<Card>.Default.Equals(left, right);
+        }
+        public static bool operator !=(Card left, Card right)
+        {
+            return !(left == right);
         }
     }
 

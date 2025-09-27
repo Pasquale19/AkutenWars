@@ -7,15 +7,25 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Deck : ObservableCollection<Card>
     {
         public static Deck DefaultDeck()
         {
             Deck deck = new Deck();
-            IEnumerable<Card> cards = Card.LoadCardsFromFile("Data/cards2.json");
+            IEnumerable<Card> cards = Card.LoadCardsFromFile("Data/cards.json");
             IEnumerable<Card> d2=deck.Concat(cards);
            return new Deck(d2);
             return deck;
+        }
+
+        public static Deck StartDeck()
+        {
+            Deck deck = new Deck();
+            IEnumerable<Card> cards = Card.LoadCardsFromFile("Data/whiteStartDeck.json");
+            IEnumerable<Card> d2 = deck.Concat(cards);
+            return new Deck(d2);
+           
         }
 
         public Deck() : base() { AddStartCards(); }

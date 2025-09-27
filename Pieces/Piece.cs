@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -66,7 +67,19 @@ namespace AkutenWars
                 }
             }
         }
-        public bool SleeveOpen => Sleeve.isOpen;
+        public bool SleeveOpen
+        {
+            get=> Sleeve.isOpen;
+            set
+            {
+                if (Sleeve.isOpen != value)
+                {
+                    Sleeve.isOpen = value;
+                    NotifyPropertyChanged(nameof(SleeveOpen));
+                }
+            }
+
+        } 
 
         public virtual PieceType Type { get; set; }
         public virtual string Name => GetType().Name;
@@ -154,6 +167,25 @@ namespace AkutenWars
                 info += $"\nCard: {Sleeve.Card.ToString()}";
             }
             return info;
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is null || obj.GetType() != this.GetType())
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+
+
+            var other = (Piece)obj;
+            return other.FullName == this.FullName && other.Sleeve==this.Sleeve;
+        }
+        public static bool operator ==(Piece left, Piece right)
+        {
+            return EqualityComparer<Piece>.Default.Equals(left, right);
+        }
+        public static bool operator !=(Piece left, Piece right)
+        {
+            return !(left == right);
         }
 
     }

@@ -42,7 +42,7 @@ namespace AkutenWars
 
         public override Piece Copy()
         {
-            Pawn copy = new Pawn(this.Color,this.Sleeve);
+            Pawn copy = new Pawn(this.Color,this.Sleeve.Copy());
             copy.hasMoved = true;
             return copy;
         }

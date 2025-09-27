@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class Position
     {
         public int Row { get; }
@@ -38,7 +39,7 @@ namespace AkutenWars
 
         public override string ToString()
         {
-            return $"Pos {Row} - {Column}";
+            return $"Pos {Row} / {Column}";
         }
 
         #region operator overloading

@@ -33,7 +33,7 @@ namespace AkutenWars
 
         public override Piece Copy()
         {
-            throw new NotImplementedException();
+            return new GoldGeneral(player: Color) { Sleeve = Sleeve.Copy() };
         }
     }
 }

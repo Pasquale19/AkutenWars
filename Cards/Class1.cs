@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AkutenWars
+namespace AkutenWars.Cards
 {
-    public enum MoveType
+    public class Class1
     {
-        Normal = 0,
-        Attack=1
 
+        public string name { get; set; } = "Name";
     }
 }

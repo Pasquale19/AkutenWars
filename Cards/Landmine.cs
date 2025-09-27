@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using AkutenWars.Cards;
 
@@ -12,7 +14,7 @@ namespace AkutenWars
     [Serializable]
     public class Landmine : Card
     {
-        public Landmine() { Name = "Landmine"; }
+        public Landmine() { Name = "Landmine"; SP = 0;ST = 0; }
         protected virtual Direction[] Direction => new Direction[]
         {
             AkutenWars.Direction.North, AkutenWars.Direction.South, AkutenWars.Direction.East
@@ -28,6 +30,8 @@ namespace AkutenWars
 
         public virtual void Detonate(Board board, Position pos)
         {
+            IEnumerable<(Piece, Position)> removedPiece = Enumerable.Empty<(Piece, Position)>();
+            Detonate(board, pos, out removedPiece); return;
             Direction[] dirs = Direction;
             foreach (Direction dir in dirs)
             {
@@ -38,6 +42,46 @@ namespace AkutenWars
                 }
             }
             board[pos] = null;
+        }
+
+        public virtual void Detonate(Board board, Position pos, out IEnumerable<(Piece, Position)> removedPiece)
+        {
+            removedPiece = Enumerable.Empty<(Piece, Position)>();
+            Direction[] dirs = Direction;
+            foreach (Direction dir in dirs)
+            {
+                Position p2 = pos + dir;
+                if (board.IsInside(p2))
+                {
+                    if (board[p2] != null)
+                    {
+                        removedPiece.Append((board[p2], p2));
+                    }
+                    board[p2] = null;
+                }
+            }
+            board[pos] = null;
+        }
+
+        public virtual IEnumerable<(Piece, Position)> Explode(Board board, Position pos)
+        {
+            Direction[] dirs = Direction;
+            foreach (Direction dir in dirs)
+            {
+                Position p2 = pos + dir;
+                if (board.IsInside(p2))
+                {
+                    if (board[p2] != null)
+                    {
+                        yield return (board[p2], p2);
+                        board[p2] = null;
+                    }
+
+                }
+            }
+            board[pos] = null;
+            yield return (board[pos], pos);
+
         }
 
         public virtual string imagePath => "pack://application:,,,/Assets/Landmine.png";
