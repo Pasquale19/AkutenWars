@@ -9,26 +9,30 @@ namespace AkutenWars
     [Serializable]
     public class Position
     {
-        public int Row { get; }
-        public int Column { get; }
+        public short Row { get; }
+        public short Column { get; }
 
-        public Position(int row, int column)
+        public Position(short row, short column)
         {
             Row = row;
             Column = column;
         }
-
+        public Position(int row, int column)
+        {
+            Row =(short) row;
+            Column =(short) column;
+        }
         public IEnumerable<Position> GetNeighborPositions(int boardSize = 9)
         {
             Position pos = this;
-          
-            int[] dRows = { -1, -1, -1, 0, 0, 1, 1, 1 };
-            int[] dCols = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+            short[] dRows = { -1, -1, -1, 0, 0, 1, 1, 1 };
+            short[] dCols = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
             for (int i = 0; i < 8; i++)
             {
-                int newRow = pos.Row + dRows[i];
-                int newCol = pos.Column + dCols[i];
+                short newRow =(short)( pos.Row + dRows[i]);
+                short newCol = (short)(pos.Column + dCols[i]);
                 // Check board bounds
                 if (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize)
                 {

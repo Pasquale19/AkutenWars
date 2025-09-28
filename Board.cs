@@ -99,12 +99,16 @@ namespace AkutenWars
             this[rows - 1, 4] = new King(EnumPlayer.Black);
         }
 
-        public bool IsInside(Position pos)
+        //public  bool IsInside(Position pos)
+        //{
+        //    bool inside = pos.Row >= 0 && pos.Column >= 0 && pos.Row < _pieces.GetLength(0) && pos.Column < _pieces.GetLength(1);
+        //    return inside;
+        //}
+        public static bool IsInside(Position pos)
         {
-            bool inside = pos.Row >= 0 && pos.Column >= 0 && pos.Row < _pieces.GetLength(0) && pos.Column < _pieces.GetLength(1);
+            bool inside = pos.Row >= 0 && pos.Column >= 0 && pos.Row < 9 && pos.Column <9;
             return inside;
         }
-
         public bool IsEmpty(Position pos)
         {
             return this[pos] == null;

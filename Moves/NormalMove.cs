@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace AkutenWars
 {
+    [Serializable]
     public class NormalMove : Move
     {
+
         public NormalMove(Position from, Position oneMovePos) : base(from, oneMovePos)
         {
         }

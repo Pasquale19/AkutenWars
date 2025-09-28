@@ -129,7 +129,7 @@ namespace AkutenWars
         protected virtual IEnumerable<Position> MovePosInDir(Position from, Board board, Direction dir, int scalar)
         {
             int scal = 1;
-            for (Position pos = from + dir; board.IsInside(pos) && scal <= scalar; pos += dir)
+            for (Position pos = from + dir; Board.IsInside(pos) && scal <= scalar; pos += dir)
             {
 
                 if (board.IsEmpty(pos))

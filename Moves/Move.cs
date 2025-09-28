@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Windows.Markup;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 //using Min = System.Math.Min;
 
 
@@ -98,7 +99,7 @@ namespace AkutenWars
                 openedPieces.Add(targetSquare);
                 //  openedPieces.Add(targetPiece);
             }
-           
+
 
             //what happen if both are landmine?
 
@@ -106,7 +107,7 @@ namespace AkutenWars
             {
                 Landmine lm = (Landmine)targetCard;
                 // this.openedPieces.Add(targetPiece);
-               // this.openedPieces.Add(targetSquare);
+                // this.openedPieces.Add(targetSquare);
                 IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, targetSquare);
                 this.removedPieces.AddRange(rmoved);
 
@@ -146,7 +147,7 @@ namespace AkutenWars
             {
                 Position lmSquare = pp.Value;
                 Landmine lm = pp.Key.Card as Landmine;
-                
+
                 // openedPieces.Add(p);
                 IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, targetSquare);
                 this.removedPieces.AddRange(rmoved);
@@ -234,11 +235,11 @@ namespace AkutenWars
             {
                 board[targetSquare] = null;
             }
-                foreach (Position pos in openedPieces)
-                {
-                    Piece p = board[pos];
-                    p.Sleeve.isOpen = false;
-                }
+            foreach (Position pos in openedPieces)
+            {
+                Piece p = board[pos];
+                p.Sleeve.isOpen = false;
+            }
 
 
 
@@ -256,12 +257,34 @@ namespace AkutenWars
             //this = Da;
         }
 
-       public void saveJson(string filePath)
+        public void saveJson(string filePath)
         {
             var settings = new JsonSerializerSettings();
             settings.Converters.Add(new Piece2DArrayConverter());
             string json = JsonConvert.SerializeObject(this, Formatting.Indented, settings);
             File.WriteAllText(filePath, json);
+        }
+
+        public Move Copy()
+        {
+            Move newMove = new Move(startSquare, targetSquare);
+            foreach ((Piece, Position) pp in this.removedPieces)
+            {
+                Piece p1 = pp.Item1 as Piece;
+                Position p2 = pp.Item2 as Position;
+                if (p1 != null)
+                {
+                    newMove.removedPieces.Add((p1.Copy(), p2));
+                }
+
+            }
+            if (targetPiece != null)
+            {
+                newMove.targetPiece = targetPiece;
+            }
+            newMove.movedPiece=this.movedPiece.Copy();
+            newMove.openedPieces.AddRange(this.openedPieces);
+            return newMove;
         }
     }
 }

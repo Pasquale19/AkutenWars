@@ -42,7 +42,7 @@ namespace AkutenWars.Bot
 
 
         [Obsolete("handle pieceColor")]
-        public static int Evaluate(Board board, EnumPlayer color)
+        public static int Evaluate(Board board, EnumPlayer color, int SupportBonus = 2)
         {
             //  IEnumerable<Piece> pieces = board.GetPieces();
 
@@ -101,8 +101,30 @@ namespace AkutenWars.Bot
                     }
 
                     sum += sumPiece * Vz;
+
+                    int SupportPoints(Position pos)
+                    {
+                        if (!Board.IsInside(pos)) return 0;
+                        Piece piece1 = board[pos];
+                        if (piece1 is null) return 0;
+                        if (piece1.Color == piece.Color) return SupportBonus;
+                        return 0;
+                    }
+                    //supportBonus
+                    List<Position> neighbours = new List<Position>(){
+                        new Position(r-1,c),
+                        new Position(r+1,c),
+                        new Position(r,c-1),
+                        new Position(r,c+1) };
+                    for (int i = 0; i < 4; i++)
+                    {
+                        sum += SupportPoints(neighbours[i]) * Vz;
+                    }
                 }
             }
+
+
+
             return sum;
         }
 
@@ -129,10 +151,10 @@ namespace AkutenWars.Bot
                     score = AlphaBeta(board, MaxDepth - 1, alpha, beta, isMaximizingPlayer); //!isMaximizingPlayer
                 }
                 move.Unmake(board);//board.UndoMove(move);
-                if (b1!=board)
+                if (b1 != board)
                 {
                     debugSave(b1, board, move);
-                   
+
                     throw new Exception("invalid Board");
                 }
                 if (score > bestScore)
@@ -243,7 +265,7 @@ namespace AkutenWars.Bot
                 move.Unmake(board);
                 if (!b1.Equals(board))
                 {
-                    debugSave(b1,board,move);
+                    debugSave(b1, board, move);
                     throw new Exception("board ungleich");
                 }
                 maxValue = Math.Max(maxValue, score);

@@ -33,7 +33,7 @@ namespace AkutenWars
 
         private static bool CanMoveTo(Position p, Board board)
         {
-            return (board.IsEmpty(p) && board.IsInside(p));
+            return (board.IsEmpty(p) && Board.IsInside(p));
         }
 
         public override PieceType Type => PieceType.Pawn;

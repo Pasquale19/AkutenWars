@@ -14,7 +14,7 @@ namespace AkutenWars
     [Serializable]
     public class Landmine : Card
     {
-        public Landmine() { Name = "Landmine"; SP = 0;ST = 0; }
+        public Landmine() { Name = "Landmine"; SP = 0; ST = 0; }
         protected virtual Direction[] Direction => new Direction[]
         {
             AkutenWars.Direction.North, AkutenWars.Direction.South, AkutenWars.Direction.East
@@ -36,7 +36,7 @@ namespace AkutenWars
             foreach (Direction dir in dirs)
             {
                 Position p2 = pos + dir;
-                if (board.IsInside(p2))
+                if (Board.IsInside(p2))
                 {
                     board[p2] = null;
                 }
@@ -51,7 +51,7 @@ namespace AkutenWars
             foreach (Direction dir in dirs)
             {
                 Position p2 = pos + dir;
-                if (board.IsInside(p2))
+                if (Board.IsInside(p2))
                 {
                     if (board[p2] != null)
                     {
@@ -69,7 +69,7 @@ namespace AkutenWars
             foreach (Direction dir in dirs)
             {
                 Position p2 = pos + dir;
-                if (board.IsInside(p2))
+                if (Board.IsInside(p2))
                 {
                     if (board[p2] != null)
                     {
@@ -79,8 +79,9 @@ namespace AkutenWars
 
                 }
             }
+            Piece p = board[pos];
             board[pos] = null;
-            yield return (board[pos], pos);
+            yield return (p, pos);
 
         }
 
