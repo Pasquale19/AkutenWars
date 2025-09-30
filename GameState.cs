@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +13,9 @@ namespace AkutenWars
     [Serializable]
     public class GameState : ObservableObject
     {
+        [Obsolete("use Stack instead")]
         Move _lastMove;
+        Stack<Move> _moveHistory = new Stack<Move>();
         static EnumPlayer[] players => new EnumPlayer[] { EnumPlayer.White, EnumPlayer.Black };
         public GameState() : this(Board.InitialBoard()) { }
 
@@ -45,7 +48,21 @@ namespace AkutenWars
                 }
             }
         }
-        public GameMode Mode { get; set; } = GameMode.MultiPlayer;
+        private GameMode _mode = GameMode.MultiPlayer;
+
+        public GameMode Mode
+        {
+            get { return _mode; }
+            set
+            {
+                if (value != _mode)
+                {
+                    _mode = value;
+                    NotifyPropertyChanged(nameof(Mode));
+                }
+            }
+        }
+
         public static GameState RandomStart()
         {
             GameState game = new GameState(EnumPlayer.White, Board.InitialBoard());
@@ -120,7 +137,8 @@ namespace AkutenWars
         public void MakeMove(Move move, out GameResult result)
         {
             this.Board.MakeMove(move);
-            _lastMove = move;
+            _moveHistory.Push(move);
+            //_lastMove = move;
             //  move.Execute(Board);
             CurrentPlayer = CurrentPlayer.Opponent();
 
@@ -129,12 +147,14 @@ namespace AkutenWars
 
         public void undoMove()
         {
-            //if only a piece is moved it doubles the Piece
-            if (_lastMove != null)
-            {
-                _lastMove.Unmake(Board);
-            }
-            _lastMove = null;
+            if (_moveHistory.Count() < 1) return;
+            Move _lastMove = _moveHistory.Pop();
+            _lastMove.Unmake(Board);
+            //if (_lastMove != null)
+            //{
+
+            //}
+            //_lastMove = null;
         }
 
         public void AddRandomCards()
@@ -166,9 +186,9 @@ namespace AkutenWars
 
         public void AddRandomCards(EnumPlayer player)
         {
-            if (player==EnumPlayer.White)
+            if (player == EnumPlayer.White)
             {
-                AddRandomCards(EnumPlayer.White,whiteDeck);
+                AddRandomCards(EnumPlayer.White, whiteDeck);
             }
             if (player == EnumPlayer.Black)
             {
@@ -176,9 +196,9 @@ namespace AkutenWars
             }
         }
 
-        public void AddRandomCards(EnumPlayer player,ObservableCollection<Card> deck)
+        public void AddRandomCards(EnumPlayer player, ObservableCollection<Card> deck)
         {
-            IEnumerable<Piece> pieces = Board.pieces.Cast<Piece>().Where(x => x != null && x.Color==player);
+            IEnumerable<Piece> pieces = Board.pieces.Cast<Piece>().Where(x => x != null && x.Color == player);
             IEnumerable<Piece> whitePieces = pieces.Where(x => x.Color == player);
 
             foreach (Piece piece in whitePieces)

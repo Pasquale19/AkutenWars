@@ -28,21 +28,21 @@ namespace AkutenWars
 
 
 
-        public virtual void Detonate(Board board, Position pos)
-        {
-            IEnumerable<(Piece, Position)> removedPiece = Enumerable.Empty<(Piece, Position)>();
-            Detonate(board, pos, out removedPiece); return;
-            Direction[] dirs = Direction;
-            foreach (Direction dir in dirs)
-            {
-                Position p2 = pos + dir;
-                if (Board.IsInside(p2))
-                {
-                    board[p2] = null;
-                }
-            }
-            board[pos] = null;
-        }
+        //public virtual void Detonate(Board board, Position pos)
+        //{
+        //    IEnumerable<(Piece, Position)> removedPiece = Enumerable.Empty<(Piece, Position)>();
+        //    Detonate(board, pos, out removedPiece); return;
+        //    Direction[] dirs = Direction;
+        //    foreach (Direction dir in dirs)
+        //    {
+        //        Position p2 = pos + dir;
+        //        if (Board.IsInside(p2))
+        //        {
+        //            board[p2] = null;
+        //        }
+        //    }
+        //    board[pos] = null;
+        //}
 
         public virtual void Detonate(Board board, Position pos, out IEnumerable<(Piece, Position)> removedPiece)
         {
@@ -71,9 +71,10 @@ namespace AkutenWars
                 Position p2 = pos + dir;
                 if (Board.IsInside(p2))
                 {
-                    if (board[p2] != null)
+                    Piece piece = board[p2];
+                    if (piece != null)
                     {
-                        yield return (board[p2], p2);
+                        yield return (piece, p2);
                         board[p2] = null;
                     }
 

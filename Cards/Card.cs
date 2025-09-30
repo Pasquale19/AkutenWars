@@ -170,6 +170,7 @@ namespace AkutenWars
         }
     }
 
+    [Serializable]
     public class EmptyCard : Card
     {
         public EmptyCard() { this.Name = "Empty";}

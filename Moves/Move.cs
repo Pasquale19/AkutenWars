@@ -149,7 +149,7 @@ namespace AkutenWars
                 Landmine lm = pp.Key.Card as Landmine;
 
                 // openedPieces.Add(p);
-                IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, targetSquare);
+                IEnumerable<(Piece, Position)> rmoved = lm.Explode(board, lmSquare);
                 this.removedPieces.AddRange(rmoved);
 
             }
@@ -238,6 +238,7 @@ namespace AkutenWars
             foreach (Position pos in openedPieces)
             {
                 Piece p = board[pos];
+                if (p is null) continue;
                 p.Sleeve.isOpen = false;
             }
 
